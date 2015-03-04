@@ -1,6 +1,6 @@
 {
     "appKeys": {
-        "ChenType": 1
+        "type": 1
     },
     "capabilities": [
         "configurable"

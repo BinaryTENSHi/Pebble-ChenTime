@@ -1,5 +1,7 @@
 #pragma once
 
+#define CHEN_TYPES 3
+  
 enum ChenType
 {
   Chibi = 0,
