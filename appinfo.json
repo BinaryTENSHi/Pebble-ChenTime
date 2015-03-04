@@ -1,0 +1,42 @@
+{
+    "appKeys": {
+        "ChenType": 1
+    },
+    "capabilities": [
+        "configurable"
+    ],
+    "companyName": "BinaryTENSHi",
+    "longName": "Chen Time",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/chen_ex.png",
+                "name": "CHEN_EX",
+                "type": "png"
+            },
+            {
+                "file": "images/chen_normal.png",
+                "name": "CHEN_NORMAL",
+                "type": "png"
+            },
+            {
+                "file": "images/chen_chibi.png",
+                "name": "CHEN_CHIBI",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "Chen Time",
+    "targetPlatforms": [
+        "aplite",
+        "basalt"
+    ],
+    "uuid": "75e0a7e7-12a9-4de6-ab57-ccf97d32707c",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
