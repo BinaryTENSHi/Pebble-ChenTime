@@ -1,5 +1,5 @@
-Pebble-ChenTime
-===============
+Chen Time
+=========
 
 An adorable watchface with your favorite cat from Touhou.
 
