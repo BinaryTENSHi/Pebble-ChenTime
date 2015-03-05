@@ -107,6 +107,7 @@ static void init()
 
 static void deinit()
 {
+  tick_timer_service_unsubscribe();
   configuration_save(_type);
   window_destroy(_window);
 }
