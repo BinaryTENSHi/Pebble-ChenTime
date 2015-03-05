@@ -6,18 +6,24 @@
   
 static Window *_window;
 static TextLayer *_timetext;
+static TextLayer *_datetext;
 static BitmapLayer *_bitmaplayer;
 static GBitmap *_bitmap;
 
 static enum ChenType _type;
 
 static void update_time() {
-  time_t temp = time(NULL); 
-  struct tm *tick_time = localtime(&temp);
-  
-  static char buffer[] = "00:00";
-  strftime(buffer, sizeof("00:00"), "%H:%M", tick_time);
-  text_layer_set_text(_timetext, buffer);
+  static char buffer_time[] = "00:00";
+  clock_copy_time_string(buffer_time, sizeof(buffer_time));
+  text_layer_set_text(_timetext, buffer_time);
+}
+
+static void update_date() {
+  static char buffer_date[] = "Mon 1995-03-30";
+  time_t temp = time(NULL);
+  struct tm *t = localtime(&temp);
+  strftime(buffer_date, sizeof(buffer_date), "%a %F", t);
+  text_layer_set_text(_datetext, buffer_date);
 }
 
 static void image_load()
@@ -44,11 +50,17 @@ static void image_load()
 
 static void window_load(Window *window)
 {
-  _timetext = text_layer_create(GRect(0,20,144,60));
+  _timetext = text_layer_create(GRect(0,10,144,60));
   text_layer_set_background_color(_timetext, GColorClear);
   text_layer_set_text_color(_timetext, GColorBlack);
-  text_layer_set_font(_timetext, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+  text_layer_set_font(_timetext, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   text_layer_set_text_alignment(_timetext, GTextAlignmentCenter);
+  
+  _datetext = text_layer_create(GRect(0,45,144,60));
+  text_layer_set_background_color(_datetext, GColorClear);
+  text_layer_set_text_color(_datetext, GColorBlack);
+  text_layer_set_font(_datetext, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  text_layer_set_text_alignment(_datetext, GTextAlignmentCenter);
   
   _bitmaplayer = bitmap_layer_create(GRect(0,0,144,168));
   
@@ -56,6 +68,7 @@ static void window_load(Window *window)
   
   layer_add_child(window_get_root_layer(_window), bitmap_layer_get_layer(_bitmaplayer));
   layer_add_child(window_get_root_layer(_window), text_layer_get_layer(_timetext));
+  layer_add_child(window_get_root_layer(_window), text_layer_get_layer(_datetext));
 }
 
 static void window_unload(Window *window)
@@ -63,11 +76,22 @@ static void window_unload(Window *window)
   gbitmap_destroy(_bitmap);
   bitmap_layer_destroy(_bitmaplayer);
   text_layer_destroy(_timetext);
+  text_layer_destroy(_datetext);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
-  update_time();
+  switch(units_changed)
+  {
+    case MINUTE_UNIT:
+      update_time();
+      break;
+    case DAY_UNIT:
+      update_date();
+      break;
+    default:
+      break;
+  }
 }
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
@@ -101,8 +125,10 @@ static void init()
   
   window_stack_push(_window, true);
   update_time();
+  update_date();
   
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(DAY_UNIT, tick_handler);
 }
 
 static void deinit()
